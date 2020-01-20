@@ -1,11 +1,11 @@
-import { Image, Appear, Notes } from 'mdx-deck'
-import { Invert, FullScreenCode } from 'mdx-deck'
-import { Head } from 'mdx-deck'
-import { prism as testCool } from './prismTheme'
-import { Prism as Highlighter } from 'react-syntax-highlighter'
-import atomDark from 'react-syntax-highlighter/dist/esm/styles/prism/atom-dark';
-
-export const themes = [ testCool ]
+import { Image, Appear, Notes, Head } from 'mdx-deck'
+import {
+  CodeSurfer,
+  CodeSurferColumns,
+  Step,
+} from "code-surfer";
+import { github, vsDark } from "@code-surfer/themes";
+import "prismjs/components/prism-kotlin"
 
 <Head>
   <title>Kotlin ❤️ Debezium</title>
@@ -125,31 +125,40 @@ _{Event Debezium}_
 
 ---
 
-<img src='https://debezium.io/images/debezium-architecture.png'  width='100%' />
-
-<ul>
-
 <Appear>
 
-<li>Connecteur 'source' vers Kafka</li>
-<li>Pipeline Kafka</li>
-<li>Connecteur 'sink' vers cible</li>
+<div>
+  Modèle de données source
+</div>
+
+<img src="https://cdn4.iconfinder.com/data/icons/computers-3/32/574-01-512.png"  width='10%' />
+
+<img src='https://www.freeiconspng.com/uploads/gears-icon-png-3-gear--31.png'  width='15%' />
+
+<img src="https://cdn4.iconfinder.com/data/icons/computers-3/32/574-01-512.png"  width='10%' />
+
+<div>
+  Modèle de données cible
+</div>
 
 </Appear>
 
-</ul>
+
+---
+
+<img src='https://debezium.io/images/debezium-architecture.png'  width='100%' />
 
 ---
 
 ## Le rêve des devs ...
 
-<img src='https://media.giphy.com/media/3oEduU2JjgQUGKyNvG/giphy.gif' width='500'/>
+<img src='https://media.giphy.com/media/3oEduU2JjgQUGKyNvG/giphy.gif' width='30%'/>
 
 ---
 
 ## ... un cauchemar pour les ops !
 
-<img src='https://media0.giphy.com/media/3x879tF9M0gcU/giphy.gif' width='500'/>
+<img src='https://media0.giphy.com/media/3x879tF9M0gcU/giphy.gif' width='30%'/>
 
 ---
 
@@ -169,54 +178,202 @@ _{Event Debezium}_
 
 ---
 
-<Highlighter language="xml" style={atomDark}>
-{`<dependency>
+<CodeSurfer theme={vsDark}>
+
+```xml
+<dependency>
+  <groupId>io.debezium</groupId>
+  <artifactId>
+    
+  </artifactId>
+  <version>${debezium.version}</version>
+</dependency>
+```
+
+```xml
+<dependency>
   <groupId>io.debezium</groupId>
   <artifactId>
     debezium-embedded
   </artifactId>
-  <version>1.0.0.Final</version>
-<dependency>`}
-</Highlighter>
+  <version>${debezium.version}</version>
+</dependency>
+```
 
----
-
-<Highlighter language="xml" style={atomDark}>
-{`<dependency>
+```xml
+<dependency>
   <groupId>io.debezium</groupId>
   <artifactId>
     debezium-connector-postgres
   </artifactId>
-  <version>1.0.0.Final</version>
-<dependency>`}
-</Highlighter>
+  <version>${debezium.version}</version>
+</dependency>
+```
+
+</CodeSurfer>
 
 ---
 
 # On veut du Kotlin !
 
-<img src='https://media0.giphy.com/media/JzOyy8vKMCwvK/giphy.gif' width='500'/>
+<img src='https://media0.giphy.com/media/JzOyy8vKMCwvK/giphy.gif' width='30%'/>
 
 ---
 
-<code></code>
+<CodeSurfer theme={vsDark}>
 
-<Invert>
+```kotlin title="Configuration Debezium"
+@Configuration
+class CdcDebeziumConfiguration {
+    @Bean
+    fun debeziumConfiguration(cdcConfig: CdcDbzConfigurationProperties): InnerDebeziumConfiguration {
+        return InnerDebeziumConfiguration.empty().withSystemProperties(Function.identity()).edit()
+                .with(EmbeddedEngine.CONNECTOR_CLASS, "io.debezium.connector.postgresql.PostgresConnector")
+                .with(EmbeddedEngine.ENGINE_NAME, APP_NAME)
+                .with(EmbeddedEngine.OFFSET_STORAGE, "org.apache.kafka.connect.storage.FileOffsetBackingStore")
+                .with(EmbeddedEngine.OFFSET_STORAGE_FILE_FILENAME, cdcConfig.offsetStorageFileName)
+                .with(EmbeddedEngine.OFFSET_FLUSH_INTERVAL_MS, cdcConfig.offsetStorageFlushIntervalMs)
 
-<FullScreenCode>
+                .with(PostgresConnectorConfig.DATABASE_NAME, cdcConfig.sourceDatabaseName)
+                .with(PostgresConnectorConfig.SERVER_NAME, cdcConfig.sourceDatabaseServerName)
+                .with(PostgresConnectorConfig.HOSTNAME, cdcConfig.sourceDatabaseHost)
+                .with(PostgresConnectorConfig.PORT, cdcConfig.sourceDatabasePort)
+                .with(PostgresConnectorConfig.USER, cdcConfig.sourceDatabaseUser)
+                .with(PostgresConnectorConfig.PASSWORD, cdcConfig.sourceDatabasePassword)
+                .with(PostgresConnectorConfig.SCHEMA_WHITELIST, cdcConfig.sourceDatabaseSchema)
+                .with(PostgresConnectorConfig.TABLE_WHITELIST, cdcConfig.sourceWhitelistTables
+                        .joinToString(",") { "${cdcConfig.sourceDatabaseSchema}.$it"})
 
-```kotlin
-val test =12
-  query {
-    fileName: file(relativePath: { eq: "images/myimage.jpg" }) {
-      childImageSharp {
-        fluid(maxWidth: 400, maxHeight: 250) {
-          ...GatsbyImageSharpFluid
-        }
-      }
+                .with("schemas.enable", false)
+                .build()
     }
-  }
+}
 ```
-</FullScreenCode>
 
-</Invert>
+```diff 6:10 subtitle="Configuration connecteur"
+
+```
+
+```diff 12:20 subtitle="Configuration BDD source"
+
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer theme={vsDark}>
+
+```kotlin title="Moteur Debezium"
+@Component
+class EmbeddedDebeziumEngine (debeziumConfiguration: CdcDebeziumConfiguration) {
+    init {
+        val embeddedEngine = EmbeddedEngine.create()
+                .using(debeziumConfiguration)
+                .notifying(consumer)
+                .build()
+
+        val executor = Executors.newSingleThreadExecutor()
+        executor.execute(embeddedEngine)
+
+        this.executor = executor
+        this.engine = engine
+    }
+
+    @PreDestroy
+    fun close() {
+        this.engine.stop()
+        this.executor.shutdown()
+    }
+}
+```
+
+```diff 4:7 subtitle="Créer moteur Debezium"
+
+```
+
+```diff 2[31:78],5[24:45] subtitle="Injecter Configuration Debezium"
+
+```
+
+```diff 9:10 subtitle="Lancement du moteur"
+
+```
+
+```diff 16:20 subtitle="Arrêter le moteur"
+
+```
+
+```diff 6 subtitle="Consumer"
+
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer theme={vsDark}>
+
+```kotlin title="Consumer unitaire"
+@Component
+class DebeziumSourceRecordConsumer : Consumer<SourceRecord> {
+  
+  override fun accept(record: SourceRecord) {
+
+      val topic = record.topic().substring(record.topic().lastIndexOf(".") + 1)
+
+      val operation = transformedRecord.headers()
+              .allWithName(ExtractNewRecordStateConfigDefinition.DEBEZIUM_OPERATION_HEADER_KEY).next()
+              .value() as String
+
+      val payload = String(valueConverter.fromConnectData(
+              record.topic(),
+              transformedRecord.valueSchema(), 
+              transformedRecord.value()))
+
+  }
+}
+```
+
+```diff 2[38:59],4 subtitle="Consumer java"
+
+```
+
+```diff 6 subtitle="Topic table source"
+
+```
+
+```diff 8:10 subtitle="Operation READ, CREATE, UPDATE, DELETE"
+
+```
+
+```diff 12:15 subtitle="Payload du tuple"
+
+```
+
+</CodeSurfer>
+
+---
+
+Performances unitaire
+Import par batch
+Problème du traitement à la volée
+Présenter le code batch
+
+---
+
+# Demo time !
+
+
+<img src='https://media3.giphy.com/media/2n8480RCQ2jBe/giphy.gif' width='30%'/>
+
+---
+
+Conslusions
+Pas adapté si gros volume vers un modèle structuré
+Pas adapté si contrainte schéma
+Pas adapté si batch
+
+Coupler avec solution batch
+
+Autres solutions : netflix

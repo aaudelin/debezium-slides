@@ -11,10 +11,12 @@
     "build": "mdx-deck build deck.mdx"
   },
   "dependencies": {
-    "mdx-deck": "^3.0.13",
-    "mdx-deck-code-surfer": "^0.5.3",
-    "raw-loader": "^1.0.0",
-    "react-syntax-highlighter": "^12.2.1"
+    "code-surfer": "3.0.0",
+    "mdx-deck": "3.0.13",
+    "raw-loader": "1.0.0",
+    "react-syntax-highlighter": "12.2.1",
+    "styled-components": "4.1.3",
+    "prismjs": "1.19.0"
   },
   "resolutions": {
     "mdx-deck/**/gatsby": "2.18.4"
