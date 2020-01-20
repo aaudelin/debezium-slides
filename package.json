@@ -1,0 +1,21 @@
+{
+  "name": "slides",
+  "version": "1.0.0",
+  "description": "Presentaion Debezium",
+  "main": "index.js",
+  "author": "Aurélien Audelin",
+  "license": "MIT",
+  "scripts": {
+    "start": "mdx-deck deck.mdx",
+    "startOther": "mdx-deck deck2.mdx",
+    "build": "mdx-deck build deck.mdx"
+  },
+  "dependencies": {
+    "mdx-deck": "^3.0.13",
+    "mdx-deck-code-surfer": "^0.5.3",
+    "raw-loader": "^1.0.0"
+  },
+  "resolutions": {
+    "mdx-deck/**/gatsby": "2.18.4"
+  }
+}
