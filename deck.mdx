@@ -1,10 +1,11 @@
 import { Image, Appear, Notes } from 'mdx-deck'
 import { Invert, FullScreenCode } from 'mdx-deck'
-import { future } from 'mdx-deck/themes'
 import { Head } from 'mdx-deck'
+import { prism as testCool } from './prismTheme'
 import { Prism as Highlighter } from 'react-syntax-highlighter'
-import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import atomDark from 'react-syntax-highlighter/dist/esm/styles/prism/atom-dark';
 
+export const themes = [ testCool ]
 
 <Head>
   <title>Kotlin ❤️ Debezium</title>
@@ -89,7 +90,7 @@ import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 <Appear>
 
-<img src='https://media1.giphy.com/media/UO5elnTqo4vSg/giphy.gif' width='300'/>
+<img src='https://media1.giphy.com/media/UO5elnTqo4vSg/giphy.gif' width='20%'/>
 
 </Appear>
 
@@ -100,7 +101,7 @@ Modification BDD (_Update, Insert, Delete_ )
 
 <Appear>
 
-<img src='https://github.com/aaudelin/debezium-slides/blob/master/images/vertical-stream-pipe.png?raw=true' width='100'/>
+<img src='https://github.com/aaudelin/debezium-slides/blob/master/images/vertical-stream-pipe.png?raw=true' width='8%'/>
 
 _{Event Debezium}_
 
@@ -108,7 +109,7 @@ _{Event Debezium}_
 
 ---
 
-#### _{Event Debezium}_  &rarr; Record
+#### _{Event Debezium}_  &rarr; SourceRecord
 
 <ul>
 
@@ -124,14 +125,98 @@ _{Event Debezium}_
 
 ---
 
+<img src='https://debezium.io/images/debezium-architecture.png'  width='100%' />
+
+<ul>
+
+<Appear>
+
+<li>Connecteur 'source' vers Kafka</li>
+<li>Pipeline Kafka</li>
+<li>Connecteur 'sink' vers cible</li>
+
+</Appear>
+
+</ul>
+
+---
+
+## Le rêve des devs ...
+
+<img src='https://media.giphy.com/media/3oEduU2JjgQUGKyNvG/giphy.gif' width='500'/>
+
+---
+
+## ... un cauchemar pour les ops !
+
+<img src='https://media0.giphy.com/media/3x879tF9M0gcU/giphy.gif' width='500'/>
+
+---
+
+## Embarqué dans Spring Boot
+
+<ul>
+
+<Appear>
+
+<li>Serveur Tomcat embarqué</li>
+<li>Auto-configuration</li>
+<li>Metrics</li>
+
+</Appear>
+
+</ul>
+
+---
+
+<Highlighter language="xml" style={atomDark}>
+{`<dependency>
+  <groupId>io.debezium</groupId>
+  <artifactId>
+    debezium-embedded
+  </artifactId>
+  <version>1.0.0.Final</version>
+<dependency>`}
+</Highlighter>
+
+---
+
+<Highlighter language="xml" style={atomDark}>
+{`<dependency>
+  <groupId>io.debezium</groupId>
+  <artifactId>
+    debezium-connector-postgres
+  </artifactId>
+  <version>1.0.0.Final</version>
+<dependency>`}
+</Highlighter>
+
+---
+
+# On veut du Kotlin !
+
+<img src='https://media0.giphy.com/media/JzOyy8vKMCwvK/giphy.gif' width='500'/>
+
+---
+
+<code></code>
+
 <Invert>
 
 <FullScreenCode>
 
-<Highlighter showLineNumbers="true"  language="kotlin" style={atomDark}>
-{`const val hello = 'hi'`}
-</Highlighter>
-
+```kotlin
+val test =12
+  query {
+    fileName: file(relativePath: { eq: "images/myimage.jpg" }) {
+      childImageSharp {
+        fluid(maxWidth: 400, maxHeight: 250) {
+          ...GatsbyImageSharpFluid
+        }
+      }
+    }
+  }
+```
 </FullScreenCode>
 
 </Invert>

@@ -13,7 +13,8 @@
   "dependencies": {
     "mdx-deck": "^3.0.13",
     "mdx-deck-code-surfer": "^0.5.3",
-    "raw-loader": "^1.0.0"
+    "raw-loader": "^1.0.0",
+    "react-syntax-highlighter": "^12.2.1"
   },
   "resolutions": {
     "mdx-deck/**/gatsby": "2.18.4"
