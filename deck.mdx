@@ -52,7 +52,7 @@ import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 <Appear>
 
-#### Le CDC avec Debezium & Kotlin
+#### Le CDC avec Debezium & Spring
 #### Le besoin et la mise en place
 #### Et avec tout ça, ça donne quoi ?
 
@@ -95,19 +95,36 @@ import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 ---
 
-Changement au niveau d'un tuple
+Modification BDD (_Update, Insert, Delete_ )
+
 
 <Appear>
 
+<img src='https://github.com/aaudelin/debezium-slides/blob/master/images/vertical-stream-pipe.png?raw=true' width='100'/>
 
-<img src='https://media1.giphy.com/media/UO5elnTqo4vSg/giphy.gif' width='300'/>
-
-Event Debezium à traiter
+_{Event Debezium}_
 
 </Appear>
 
 ---
 
+#### _{Event Debezium}_  &rarr; Record
+
+<ul>
+
+<Appear>
+
+<li>Topic</li>
+<li>Operation</li>
+<li>Payload</li>
+
+</Appear>
+
+</ul>
+
+---
+
+<Invert>
 
 <FullScreenCode>
 
@@ -116,3 +133,5 @@ Event Debezium à traiter
 </Highlighter>
 
 </FullScreenCode>
+
+</Invert>
