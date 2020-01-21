@@ -15,11 +15,13 @@ import "prismjs/components/prism-kotlin"
 # Un joyeux mélange !
 
 
-<div>
-  <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Kotlin-logo.svg/800px-Kotlin-logo.svg.png' width='100'/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-  <img src='https://avatars3.githubusercontent.com/u/11964329?s=400&v=4' width='100'/>
-</div>
+<Split>
+
+  <img style="margin-right:2em;" src='https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Kotlin-logo.svg/800px-Kotlin-logo.svg.png' width='100'/>
+
+  <img style="margin-left:2em;" src='https://avatars3.githubusercontent.com/u/11964329?s=400&v=4' width='100'/>
+
+</Split>
 
 ---
 
@@ -93,12 +95,11 @@ linkedin.com/in/aaudelin/
 
 ---
 
-## "_Turn your database_ 
-## _into stream events_"
+> “Turn your database into stream events”
 
 <Appear>
 
-<img src='https://media1.giphy.com/media/UO5elnTqo4vSg/giphy.gif' width='20%'/>
+<img src='https://media1.giphy.com/media/UO5elnTqo4vSg/giphy.gif' width='30%'/>
 
 </Appear>
 
@@ -170,7 +171,7 @@ _{Event Debezium}_
 
 ---
 
-## Embarqué dans Spring Boot
+## Embarqué dans Spring Boot :rocket:
 
 <ul>
 
@@ -338,7 +339,10 @@ class DebeziumSourceRecordConsumer : Consumer<SourceRecord> {
             record.topic(),
             transformedRecord.valueSchema()))
 
-    // Traitement
+    val entiteSink = processor.process(payload)
+
+    jdbcTemplate.upsert(entiteSink)
+
   }
 }
 ```
@@ -356,6 +360,10 @@ class DebeziumSourceRecordConsumer : Consumer<SourceRecord> {
 ```
 
 ```diff 12:15 subtitle="Payload du tuple"
+
+```
+
+```diff 16:18 subtitle="Transformation et enregistrement du record"
 
 ```
 
@@ -395,15 +403,13 @@ class DebeziumSourceRecordConsumer : Consumer<SourceRecord> {
 
 ---
 
-# Modèle 'sink' structuré
-
-## Traitement par batch
+# Traitement par batch
 
 <img src='https://media.giphy.com/media/d3mlE7uhX8KFgEmY/giphy.gif' width='30%'/>
 
 ---
 
-# Modèle 'sink' structuré
+# Traitement par batch
 
 <ul>
 
@@ -419,26 +425,38 @@ class DebeziumSourceRecordConsumer : Consumer<SourceRecord> {
 
 ---
 
+# Traitement par batch
+
+<ul>
+
+<li style={{ color:'tomato' }}>Batch d'entités debezium</li>
+<li>Mono-threadé</li>
+<li style={{ color:'tomato' }}>Batch update</li>
+
+</ul>
+
+---
+
 <Horizontal>
 
 ### 27 heures
 
-<ul>
-<li>Séquentiel</li>
+<ul style="text-align:left; width:150%; margin-left:2em;font-size:0.8em">
+<li style={{ color:'indigo' }}>Séquentiel</li>
 <li>Mono-threadé</li>
-<li>Insertion unitaire</li>
+<li style={{ color:'steelblue' }}>Insertion unitaire</li>
 </ul>
 
 </Horizontal>
 
 <Horizontal>
 
-### X heures
+### 4 heures
 
-<ul>
-<li>Batch d'entités debezium</li>
+<ul style="text-align:left; width:150%; margin-left:2em;font-size:0.8em">
+<li style={{ color:'indigo' }}>Batch d'entités debezium</li>
 <li>Mono-threadé</li>
-<li>Batch update</li>
+<li style={{ color:'steelblue' }}>Batch update</li>
 </ul>
 
 </Horizontal>
@@ -472,7 +490,7 @@ class DebeziumSourceRecordConsumer : EmbeddedEngine.ChangeConsumer {
             transformedRecord.valueSchema(), 
             transformedRecord.value()))
 
-    // Traitement
+    val entiteSink = processor.process(payload)
 
     committer.markProcessed(record)
   }
@@ -488,6 +506,10 @@ class DebeziumSourceRecordConsumer : EmbeddedEngine.ChangeConsumer {
 ```
 
 ```diff 14:24 subtitle="Topic, Operation, Payload"
+
+```
+
+```diff 25 subtitle="Transformation du record"
 
 ```
 
@@ -510,7 +532,7 @@ class DebeziumSourceRecordConsumer : EmbeddedEngine.ChangeConsumer {
 # Demo time !
 
 
-<img src='https://media3.giphy.com/media/2n8480RCQ2jBe/giphy.gif' width='30%'/>
+<img src='https://media3.giphy.com/media/2n8480RCQ2jBe/giphy.gif' width='40%'/>
 
 ---
 
@@ -530,11 +552,23 @@ class DebeziumSourceRecordConsumer : EmbeddedEngine.ChangeConsumer {
 
 ---
 
-Conslusions
-Pas adapté si gros volume vers un modèle structuré
-Pas adapté si contrainte schéma
-Pas adapté si batch
+## En synthèse
 
-Coupler avec solution batch
+<ul>
 
-Autres solutions : netflix
+<Appear>
+
+<li>Simple et pratique</li>
+<li>Performances et contraintes</li>
+<li>Solution batch et concurrence</li>
+<li>Maxwell, SpinalTap, Yelp’s MySQL Streamer, DBLog</li>
+
+</Appear>
+
+</ul>
+
+---
+
+# Questions ?
+
+<img src='https://media0.giphy.com/media/3ohzdRoOp1FUYbtGDu/giphy.gif' width='50%'/>
