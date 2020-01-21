@@ -1,4 +1,4 @@
-import { Image, Appear, Notes, Head } from 'mdx-deck'
+import { Image, Appear, Notes, Head, Split, Horizontal } from 'mdx-deck'
 import {
   CodeSurfer,
   CodeSurferColumns,
@@ -25,21 +25,29 @@ import "prismjs/components/prism-kotlin"
 
 # L'instant promo
 
-<div>
-  <img src='https://upload.wikimedia.org/wikipedia/fr/c/c8/Twitter_Bird.svg' width='100'/>
-&nbsp; @AurelienAudelin
-</div>
+<Split>
 
-<div>
-  <img src='https://www.solutions-numeriques.com/wp-content/uploads/2015/01/linkedin-1424358279.png' width='100'/>
-&nbsp;github.com/aaudelin
+<img src='https://upload.wikimedia.org/wikipedia/fr/c/c8/Twitter_Bird.svg' width='100'/>
 
-</div>
+@AurelienAudelin
 
-<div>
-  <img src='https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png' width='100'/>
-&nbsp;linkedin.com/in/aaudelin/
-</div>
+</Split>
+
+<Split>
+  
+<img src='https://www.solutions-numeriques.com/wp-content/uploads/2015/01/linkedin-1424358279.png' width='100'/>
+
+github.com/aaudelin
+
+</Split>
+
+<Split>
+
+<img src='https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png' width='100'/>
+
+linkedin.com/in/aaudelin/
+
+</Split>
 
 ---
 
@@ -320,17 +328,17 @@ class DebeziumSourceRecordConsumer : Consumer<SourceRecord> {
   
   override fun accept(record: SourceRecord) {
 
-      val topic = record.topic().substring(record.topic().lastIndexOf(".") + 1)
+    val topic = record.topic().substring(record.topic().lastIndexOf(".") + 1)
 
-      val operation = transformedRecord.headers()
-              .allWithName(ExtractNewRecordStateConfigDefinition.DEBEZIUM_OPERATION_HEADER_KEY).next()
-              .value() as String
+    val operation = transformedRecord.headers()
+            .allWithName(ExtractNewRecordStateConfigDefinition.DEBEZIUM_OPERATION_HEADER_KEY).next()
+            .value() as String
 
-      val payload = String(valueConverter.fromConnectData(
-              record.topic(),
-              transformedRecord.valueSchema(), 
-              transformedRecord.value()))
+    val payload = String(valueConverter.fromConnectData(
+            record.topic(),
+            transformedRecord.valueSchema()))
 
+    // Traitement
   }
 }
 ```
@@ -355,10 +363,147 @@ class DebeziumSourceRecordConsumer : Consumer<SourceRecord> {
 
 ---
 
-Performances unitaire
-Import par batch
-Problème du traitement à la volée
-Présenter le code batch
+# Modèle 'sink' structuré
+
+<ul>
+
+<Appear>
+
+<li>Séquentiel</li>
+<li>Mono-threadé</li>
+<li>Insertion unitaire</li>
+
+</Appear>
+
+</ul>
+
+---
+
+# Performances
+
+<Appear>
+
+## 68 entités par seconde
+
+## 5 362 123 import initial
+
+</Appear>
+
+---
+
+# 27 Heures d'import initial
+
+---
+
+# Modèle 'sink' structuré
+
+## Traitement par batch
+
+<img src='https://media.giphy.com/media/d3mlE7uhX8KFgEmY/giphy.gif' width='30%'/>
+
+---
+
+# Modèle 'sink' structuré
+
+<ul>
+
+<Appear>
+
+<li>Batch d'entités debezium</li>
+<li>Mono-threadé</li>
+<li>Batch update</li>
+
+</Appear>
+
+</ul>
+
+---
+
+<Horizontal>
+
+<ul>
+<li>Séquentiel</li>
+<li>Mono-threadé</li>
+<li>Insertion unitaire</li>
+</ul>
+
+## 27 heures
+
+</Horizontal>
+
+<Horizontal>
+
+<ul>
+<li>Batch d'entités debezium</li>
+<li>Mono-threadé</li>
+<li>Batch update</li>
+</ul>
+
+## X heures
+
+</Horizontal>
+
+---
+
+<CodeSurfer theme={vsDark}>
+
+```kotlin title="Consumer par batch"
+@Component
+class DebeziumSourceRecordConsumer : EmbeddedEngine.ChangeConsumer {
+
+  override fun handleBatch(listRecords: MutableList<SourceRecord>, committer: EmbeddedEngine.RecordCommitter) {
+        listRecords.forEach { accept(it, committer) }
+
+        batchUpdate(listRecords)
+
+        committer.markBatchFinished()
+    }
+  
+  fun accept(record: SourceRecord, committer: EmbeddedEngine.RecordCommitter) {
+
+    val topic = record.topic().substring(record.topic().lastIndexOf(".") + 1)
+
+    val operation = transformedRecord.headers()
+            .allWithName(ExtractNewRecordStateConfigDefinition.DEBEZIUM_OPERATION_HEADER_KEY).next()
+            .value() as String
+
+    val payload = String(valueConverter.fromConnectData(
+            record.topic(),
+            transformedRecord.valueSchema(), 
+            transformedRecord.value()))
+
+    // Traitement
+
+    committer.markProcessed(record)
+  }
+}
+```
+
+```diff 2[38:67],4 subtitle="Consumer debezium"
+
+```
+
+```diff 5,12 subtitle="Traitement des records"
+
+```
+
+```diff 14:24 subtitle="Topic, Operation, Payload"
+
+```
+
+```diff 27 subtitle="Offset du record"
+
+```
+
+```diff 7 subtitle="Update BDD"
+
+```
+
+```diff 9 subtitle="Offset du batch"
+
+```
+
+</CodeSurfer>
 
 ---
 
