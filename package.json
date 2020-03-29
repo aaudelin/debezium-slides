@@ -7,7 +7,6 @@
   "license": "MIT",
   "scripts": {
     "start": "mdx-deck deck.mdx",
-    "startOther": "mdx-deck deck2.mdx",
     "build": "mdx-deck build deck.mdx"
   },
   "dependencies": {

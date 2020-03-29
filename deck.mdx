@@ -71,6 +71,38 @@ import "prismjs/components/prism-kotlin"
 
 ---
 
+<img src='https://thumbs.gfycat.com/IdlePaleKissingbug-size_restricted.gif' width='50%'/>
+
+---
+
+# :dart:
+# Copier ET qualifier de la donnée
+# depuis un référentiel
+
+---
+
+<Appear>
+
+## :ballot_box_with_check: Ne pas modifier la base référentielle
+## :ballot_box_with_check: Avoir une base métier qualifiée et enrichie
+## :ballot_box_with_check: Garder une synchronisation permanente
+
+</Appear>
+
+---
+
+# Comment faire ? :cold_sweat:
+
+<Appear>
+
+#### Batch &rarr; modification du modèle (delta)  :disappointed:
+#### Solutions natives SGBD &rarr; enrichir la donnée :disappointed:
+#### C.D.C &rarr; :smirk:
+
+</Appear>
+
+---
+
 # C 
 # D 
 # C
@@ -137,7 +169,7 @@ _{Event Debezium}_
 <Appear>
 
 <div>
-  Modèle de données source
+  Base de données référentielle
 </div>
 
 <img src="https://cdn4.iconfinder.com/data/icons/computers-3/32/574-01-512.png"  width='10%' />
@@ -147,11 +179,27 @@ _{Event Debezium}_
 <img src="https://cdn4.iconfinder.com/data/icons/computers-3/32/574-01-512.png"  width='10%' />
 
 <div>
-  Modèle de données sink
+  Base de données métier
 </div>
 
 </Appear>
 
+---
+
+
+<div>
+  Base de données source
+</div>
+
+<img src="https://cdn4.iconfinder.com/data/icons/computers-3/32/574-01-512.png"  width='10%' />
+
+<img src='https://www.freeiconspng.com/uploads/gears-icon-png-3-gear--31.png'  width='15%' />
+
+<img src="https://cdn4.iconfinder.com/data/icons/computers-3/32/574-01-512.png"  width='10%' />
+
+<div>
+  Base de données sink
+</div>
 
 ---
 
@@ -220,6 +268,22 @@ _{Event Debezium}_
 ```
 
 </CodeSurfer>
+
+---
+
+# Quelques contraintes quand même !
+
+<ul>
+
+<Appear>
+
+<li>Logs de réplication</li>
+<li>Slot de réplication</li>
+
+</Appear>
+
+</ul>
+
 
 ---
 
@@ -368,10 +432,6 @@ class DebeziumSourceRecordConsumer : Consumer<SourceRecord> {
 ```
 
 </CodeSurfer>
-
----
-
-<img src='https://debezium.io/images/debezium-architecture.png'  width='100%' />
 
 ---
 
