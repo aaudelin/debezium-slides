@@ -358,6 +358,14 @@ class EmbeddedDebeziumEngine (debeziumConfiguration: CdcDebeziumConfiguration) {
         this.engine.stop()
         this.executor.shutdown()
     }
+
+    @Scheduled(fixedDelay = 5000)
+    fun checkEngine() {
+        log.debug("Check Debezium engine state...")
+        if (!this.engine.isRunning) {
+            this.engine.run()
+        }
+    }
 }
 ```
 
@@ -374,6 +382,10 @@ class EmbeddedDebeziumEngine (debeziumConfiguration: CdcDebeziumConfiguration) {
 ```
 
 ```diff 16:20 subtitle="Arrêter le moteur"
+
+```
+
+```diff 22:28 subtitle="Superviser le moteur"
 
 ```
 
@@ -608,14 +620,6 @@ class DebeziumSourceRecordConsumer : EmbeddedEngine.ChangeConsumer {
 
 ---
 
-<img src='https://github.com/aaudelin/debezium-slides/blob/master/images/structureh3.png?raw=true' width='100%'/>
-
----
-
-<img src='https://github.com/aaudelin/debezium-slides/blob/master/images/structureh4.png?raw=true' width='100%'/>
-
----
-
 ## En synthèse
 
 <ul>
@@ -624,7 +628,7 @@ class DebeziumSourceRecordConsumer : EmbeddedEngine.ChangeConsumer {
 
 <li>Simple et pratique</li>
 <li>Performances et contraintes</li>
-<li>S'accorde avec Kotlin :heart: </li>
+<li>S'accorde avec Kotlin ❤️ </li>
 
 </Appear>
 
@@ -652,3 +656,9 @@ class DebeziumSourceRecordConsumer : EmbeddedEngine.ChangeConsumer {
 # Questions ?
 
 <img src='https://media0.giphy.com/media/3ohzdRoOp1FUYbtGDu/giphy.gif' width='50%'/>
+
+---
+
+# Gagne une license JetBrains !
+
+<img src='https://github.com/aaudelin/debezium-slides/blob/master/images/license-jetbrains.png?raw=true' width='100%'/>
